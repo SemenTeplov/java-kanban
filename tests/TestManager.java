@@ -1,5 +1,5 @@
-import Models.EpicTask;
-import Models.Status;
+import models.EpicTask;
+import models.Status;
 
 import java.util.logging.Logger;
 

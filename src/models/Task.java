@@ -1,4 +1,4 @@
-package Models;
+package models;
 
 public class Task extends AbstractTask {
     public Task(int id, String name, String description) {

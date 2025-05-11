@@ -1,10 +1,10 @@
-package Models;
+package models;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EpicTask extends AbstractTask {
-    private final Map<Integer, AbstractTask> tasks;
+    private final Map<Integer, Task> tasks;
 
     public EpicTask(int id, String name, String description) {
         super(id, name, description);
@@ -30,7 +30,7 @@ public class EpicTask extends AbstractTask {
         throw new IllegalArgumentException("ID " + id + " doesn't exist.");
     }
 
-    public Map<Integer, AbstractTask> getAllTasks() {
+    public Map<Integer, Task> getAllTasks() {
         return tasks;
     }
 

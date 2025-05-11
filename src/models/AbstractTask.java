@@ -1,4 +1,4 @@
-package Models;
+package models;
 
 public abstract class AbstractTask {
     private final int id;

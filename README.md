@@ -28,7 +28,7 @@ gets count elements in the epic; method removeTask, removes task in the epic by 
 private method checkStatus, checks status for each tasks in the epic.
 
 ### Manager
-Class manager has one constructor, a map tasks and a counter.
+Class manager has one constructor, two maps of tasks and a counter.
 
 Added method getNewId, it gets id for tasks and epics; getAll, it returns map with all tasks and epics; removeAll, 
 remove all tasks and reset counter; getById, searches a task or an epic by id, searches even in epics, 
@@ -41,6 +41,3 @@ Class TestManager, is located in the folder tests, checks class Manager.
 
 ### Note
 Have been two classes: EpicTask and Task, because functions Task and Subtask are similar.
-Class EpicTask allows to create not only Tasks, but other EpicTasks, it's need for next extend application with a few
-deep levels. Here use for one HashMap, because tasks and epics extends AbstractTask, then use HashMap with abstract class
-and, as needed, abstract class converts to need class(task or epic);

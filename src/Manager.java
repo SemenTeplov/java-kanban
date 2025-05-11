@@ -1,17 +1,19 @@
-import Models.AbstractTask;
-import Models.EpicTask;
-import Models.Status;
-import Models.Task;
+import models.AbstractTask;
+import models.EpicTask;
+import models.Status;
+import models.Task;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Manager {
-    private final Map<Integer, AbstractTask> tasks;
+    private final Map<Integer, Task> tasks;
+    private final Map<Integer, EpicTask> epicTasks;
     private int currentId;
 
     public Manager() {
         tasks = new HashMap<>();
+        epicTasks = new HashMap<>();
         currentId = 1;
     }
 
@@ -19,27 +21,26 @@ public class Manager {
         return currentId++;
     }
 
-    public Map<Integer, AbstractTask> getAll() {
+    public Map<Integer, Task> getAll() {
         return tasks;
     }
 
     public void removeAll() {
         tasks.clear();
+        epicTasks.clear();
         currentId = 1;
     }
 
     public AbstractTask getById(int id) {
         if (tasks.containsKey(id)) {
             return tasks.get(id);
+        } else if (epicTasks.containsKey(id)) {
+            return epicTasks.get(id);
         }
 
-        for (int i : tasks.keySet()) {
-            if (tasks.get(i).getClass().getSimpleName().equals("EpicTask")) {
-                EpicTask epicTask = (EpicTask)tasks.get(i);
-
-                if (epicTask.getAllTasks().containsKey(id)) {
-                    return epicTask.getTaskById(id);
-                }
+        for (int i : epicTasks.keySet()) {
+            if (epicTasks.get(i).getAllTasks().containsKey(id)) {
+                return epicTasks.get(i).getTaskById(id);
             }
         }
 
@@ -51,7 +52,7 @@ public class Manager {
     }
 
     public void createEpicTask(String name, String description) {
-        tasks.put(currentId, new EpicTask(currentId++, name, description));
+        epicTasks.put(currentId, new EpicTask(currentId++, name, description));
     }
 
     public void updateTask(int id, String name, String description, Status status) {
@@ -71,17 +72,14 @@ public class Manager {
 
     public void removeById(int id) {
         tasks.remove(id);
+        epicTasks.remove(id);
 
-        for (int i : tasks.keySet()) {
-            if (tasks.get(i).getClass().getSimpleName().equals("EpicTask")) {
-                EpicTask epicTask = (EpicTask)tasks.get(i);
-
-                epicTask.getAllTasks().remove(id);
-            }
+        for (int i : epicTasks.keySet()) {
+            epicTasks.get(i).getAllTasks().remove(id);
         }
     }
 
-    public Map<Integer, AbstractTask> getTasksOfEpic(int id) {
+    public Map<Integer, Task> getTasksOfEpic(int id) {
         if (getById(id).getClass().getSimpleName().equals("EpicTask")) {
             EpicTask epic = (EpicTask)getById(id);
 
