@@ -36,14 +36,14 @@ public class TestManager {
         manager.createEpicTask("EpicTask 1", "Some text1.");
         manager.createEpicTask("EpicTask 2", "Some text2.");
 
-        if (!manager.getById(1).toString().equals("1 EpicTask 1 Some text1.")) {
+        if (!manager.getEpicById(1).toString().equals("1 EpicTask 1 Some text1.")) {
             logger.warning("ERROR test1 createEpicTask is fail\n" +
                     "expected: 1 EpicTask 1 Some text1.\n" +
                     "received: " + manager.getById(1).toString());
             return;
         }
 
-        if (!manager.getById(2).toString().equals("2 EpicTask 2 Some text2.")) {
+        if (!manager.getEpicById(2).toString().equals("2 EpicTask 2 Some text2.")) {
             logger.warning("ERROR test2 createEpicTask is fail\n" +
                     "expected: 2 EpicTask 2 Some text2.\n" +
                     "received: " + manager.getById(2).toString());
@@ -87,11 +87,11 @@ public class TestManager {
         manager.createEpicTask("EpicTask 1", "Some text1.");
         manager.createEpicTask("EpicTask 2", "Some text2.");
 
-        EpicTask task = (EpicTask)manager.getById(5);
+        EpicTask task = manager.getEpicById(5);
         task.addTask(manager.getNewId(), "Task 5", "Some text5.");
         task.addTask(manager.getNewId(), "Task 6", "Some text6.");
 
-        task = (EpicTask)manager.getById(6);
+        task = manager.getEpicById(6);
         task.addTask(manager.getNewId(), "Task 7", "Some text7.");
         task.addTask(manager.getNewId(), "Task 8", "Some text8.");
 
@@ -109,7 +109,7 @@ public class TestManager {
             return;
         }
 
-        if (!manager.getById(5).toString()
+        if (!manager.getEpicById((5)).toString()
                 .equals("5 EpicTask 1 Some text1. subtasks: 7 Task 5 Some text5. 8 Task 6 Some text6. ")) {
             logger.warning("ERROR test3 getById is fail\n" +
                     "expected: 5 EpicTask 1 Some text1. subtasks: 7 Task 5 Some text5. 8 Task 6 Some text6.\n" +
@@ -177,11 +177,11 @@ public class TestManager {
         manager.createEpicTask("EpicTask 1", "Some text1.");
         manager.createEpicTask("EpicTask 2", "Some text2.");
 
-        EpicTask task = (EpicTask)manager.getById(5);
+        EpicTask task = manager.getEpicById(5);
         task.addTask(manager.getNewId(), "Task 5", "Some text5.");
         task.addTask(manager.getNewId(), "Task 6", "Some text6.");
 
-        task = (EpicTask)manager.getById(6);
+        task = manager.getEpicById(6);
         task.addTask(manager.getNewId(), "Task 7", "Some text7.");
         task.addTask(manager.getNewId(), "Task 8", "Some text8.");
 
@@ -211,7 +211,7 @@ public class TestManager {
         manager.createEpicTask("EpicTask 1", "Some text1.");
         manager.createEpicTask("EpicTask 2", "Some text2.");
 
-        EpicTask task = (EpicTask)manager.getById(1);
+        EpicTask task = manager.getEpicById(1);
         task.addTask(manager.getNewId(), "Task 1", "Some text1.");
         task.addTask(manager.getNewId(), "Task 2", "Some text3.");
 

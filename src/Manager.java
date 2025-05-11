@@ -31,17 +31,23 @@ public class Manager {
         currentId = 1;
     }
 
-    public AbstractTask getById(int id) {
+    public Task getById(int id) {
         if (tasks.containsKey(id)) {
             return tasks.get(id);
-        } else if (epicTasks.containsKey(id)) {
-            return epicTasks.get(id);
         }
 
         for (int i : epicTasks.keySet()) {
             if (epicTasks.get(i).getAllTasks().containsKey(id)) {
                 return epicTasks.get(i).getTaskById(id);
             }
+        }
+
+        throw new IllegalArgumentException("ID " + id + " doesn't exist.");
+    }
+
+    public EpicTask getEpicById(int id) {
+        if (epicTasks.containsKey(id)) {
+            return epicTasks.get(id);
         }
 
         throw new IllegalArgumentException("ID " + id + " doesn't exist.");
@@ -80,11 +86,9 @@ public class Manager {
     }
 
     public Map<Integer, Task> getTasksOfEpic(int id) {
-        if (getById(id).getClass().getSimpleName().equals("EpicTask")) {
-            EpicTask epic = (EpicTask)getById(id);
-
-            return epic.getAllTasks();
-        }
+         if (epicTasks.containsKey(id)) {
+            return epicTasks.get(id).getAllTasks();
+         }
 
         throw new IllegalArgumentException("ID " + id + " doesn't exist.");
     }

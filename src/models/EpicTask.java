@@ -22,7 +22,7 @@ public class EpicTask extends AbstractTask {
         checkStatus();
     }
 
-    public AbstractTask getTaskById(int id) {
+    public Task getTaskById(int id) {
         if (tasks.containsKey(id)) {
             return tasks.get(id);
         }
