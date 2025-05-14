@@ -88,12 +88,12 @@ public class TestManager {
         manager.createEpicTask("EpicTask 2", "Some text2.");
 
         EpicTask task = manager.getEpicById(5);
-        task.addTask(manager.getNewId(), "Task 5", "Some text5.");
-        task.addTask(manager.getNewId(), "Task 6", "Some text6.");
+        manager.createSubtask(task.getId(), "Task 5", "Some text5.");
+        manager.createSubtask(task.getId(), "Task 6", "Some text6.");
 
         task = manager.getEpicById(6);
-        task.addTask(manager.getNewId(), "Task 7", "Some text7.");
-        task.addTask(manager.getNewId(), "Task 8", "Some text8.");
+        manager.createSubtask(task.getId(), "Task 7", "Some text7.");
+        manager.createSubtask(task.getId(), "Task 8", "Some text8.");
 
         if (!manager.getById(2).toString().equals("2 Task 2 Some text2.")) {
             logger.warning("ERROR test1 getById is fail\n" +
@@ -117,7 +117,7 @@ public class TestManager {
             return;
         }
 
-        if (!manager.getById(9).toString().equals("9 Task 7 Some text7.")) {
+        if (!manager.getSubtaskById(9).toString().equals("9 Task 7 Some text7.")) {
             logger.warning("ERROR test4 getById is fail\n" +
                     "expected: 9 Task 7 Some text7.\n" +
                     "received: " + manager.getById(4).toString());
@@ -136,8 +136,8 @@ public class TestManager {
         manager.createTask("Task 3", "Some text3.");
 
         manager.updateTask(1, "TaskChange1", "Text1", Status.NEW);
-        manager.updateTask(2, "TaskChange2", "Text2");
-        manager.updateTask(3, "TaskChange3");
+        manager.updateTask(2, "TaskChange2", "Text2", Status.IN_PROGRESS);
+        manager.updateTask(3, "TaskChange3", "Text3", Status.IN_PROGRESS);
 
         if (!manager.getById(1).toString().equals("1 TaskChange1 Text1")
                 && manager.getById(1).getStatus() != Status.NEW) {
@@ -178,12 +178,12 @@ public class TestManager {
         manager.createEpicTask("EpicTask 2", "Some text2.");
 
         EpicTask task = manager.getEpicById(5);
-        task.addTask(manager.getNewId(), "Task 5", "Some text5.");
-        task.addTask(manager.getNewId(), "Task 6", "Some text6.");
+        manager.createSubtask(task.getId(), "Task 5", "Some text5.");
+        manager.createSubtask(task.getId(), "Task 6", "Some text6.");
 
         task = manager.getEpicById(6);
-        task.addTask(manager.getNewId(), "Task 7", "Some text7.");
-        task.addTask(manager.getNewId(), "Task 8", "Some text8.");
+        manager.createSubtask(task.getId(), "Task 7", "Some text7.");
+        manager.createSubtask(task.getId(), "Task 8", "Some text8.");
 
         manager.removeById(2);
         manager.removeById(9);
@@ -212,8 +212,8 @@ public class TestManager {
         manager.createEpicTask("EpicTask 2", "Some text2.");
 
         EpicTask task = manager.getEpicById(1);
-        task.addTask(manager.getNewId(), "Task 1", "Some text1.");
-        task.addTask(manager.getNewId(), "Task 2", "Some text3.");
+        manager.createSubtask(task.getId(), "Task 1", "Some text1.");
+        manager.createSubtask(task.getId(), "Task 2", "Some text3.");
 
         if (manager.getTasksOfEpic(1).size() != 2) {
             logger.warning("ERROR test1 getTasksOfEpic is fail.");

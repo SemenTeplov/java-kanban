@@ -1,8 +1,8 @@
 import java.util.logging.Logger;
 
-public class Main {
+public class Test {
     public static void main(String[] args) {
-        Logger logger = Logger.getLogger(Main.class.getName());
+        Logger logger = Logger.getLogger(Test.class.getName());
 
         logger.info("Testing class Manager");
         TestManager.testCreateTask();

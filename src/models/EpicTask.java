@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EpicTask extends AbstractTask {
-    private final Map<Integer, Task> tasks;
+    private final Map<Integer, Subtask> tasks;
 
     public EpicTask(int id, String name, String description) {
         super(id, name, description);
@@ -17,12 +17,12 @@ public class EpicTask extends AbstractTask {
         tasks = new HashMap<>();
     }
 
-    public void addTask(int id, String name, String description) {
-        tasks.put(id, new Task(id, name, description));
+    public void addTask(Subtask task) {
+        tasks.put(task.getId(), task);
         checkStatus();
     }
 
-    public Task getTaskById(int id) {
+    public Subtask getTaskById(int id) {
         if (tasks.containsKey(id)) {
             return tasks.get(id);
         }
@@ -30,7 +30,7 @@ public class EpicTask extends AbstractTask {
         throw new IllegalArgumentException("ID " + id + " doesn't exist.");
     }
 
-    public Map<Integer, Task> getAllTasks() {
+    public Map<Integer, Subtask> getAllTasks() {
         return tasks;
     }
 

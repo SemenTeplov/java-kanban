@@ -1,7 +1,4 @@
-import models.AbstractTask;
-import models.EpicTask;
-import models.Status;
-import models.Task;
+import models.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,11 +6,13 @@ import java.util.Map;
 public class Manager {
     private final Map<Integer, Task> tasks;
     private final Map<Integer, EpicTask> epicTasks;
+    private final Map<Integer, Subtask> subTasks;
     private int currentId;
 
     public Manager() {
         tasks = new HashMap<>();
         epicTasks = new HashMap<>();
+        subTasks = new HashMap<>();
         currentId = 1;
     }
 
@@ -28,6 +27,7 @@ public class Manager {
     public void removeAll() {
         tasks.clear();
         epicTasks.clear();
+        subTasks.clear();
         currentId = 1;
     }
 
@@ -36,10 +36,12 @@ public class Manager {
             return tasks.get(id);
         }
 
-        for (int i : epicTasks.keySet()) {
-            if (epicTasks.get(i).getAllTasks().containsKey(id)) {
-                return epicTasks.get(i).getTaskById(id);
-            }
+        throw new IllegalArgumentException("ID " + id + " doesn't exist.");
+    }
+
+    public Subtask getSubtaskById(int id) {
+        if (subTasks.containsKey(id)) {
+            return subTasks.get(id);
         }
 
         throw new IllegalArgumentException("ID " + id + " doesn't exist.");
@@ -57,35 +59,56 @@ public class Manager {
         tasks.put(currentId, new Task(currentId++, name, description));
     }
 
+    public void createSubtask(int idOwner, String name, String description) {
+        if (!epicTasks.containsKey(idOwner)) {
+            throw new IllegalArgumentException("ID " + idOwner + " doesn't exist.");
+        }
+
+        Subtask task = new Subtask(currentId++, idOwner, name, description);
+
+        subTasks.put(currentId, task);
+        epicTasks.get(idOwner).addTask(task);
+    }
+
     public void createEpicTask(String name, String description) {
         epicTasks.put(currentId, new EpicTask(currentId++, name, description));
     }
 
     public void updateTask(int id, String name, String description, Status status) {
-        getById(id).setName(name);
-        getById(id).setDescription(description);
-        getById(id).setStatus(status);
+        Task task = getById(id);
+
+        task.setName(name);
+        task.setDescription(description);
+        task.setStatus(status);
     }
 
-    public void updateTask(int id, String name, String description) {
-        getById(id).setName(name);
-        getById(id).setDescription(description);
+    public void updateEpicTask(int id, String name, String description, Status status) {
+        EpicTask task = getEpicById(id);
+
+        task.setName(name);
+        task.setDescription(description);
+        task.setStatus(status);
     }
 
-    public void updateTask(int id, String name) {
-        getById(id).setName(name);
+    public void updateSubtask(int id, String name, String description, Status status) {
+        Subtask task = getSubtaskById(id);
+
+        task.setName(name);
+        task.setDescription(description);
+        task.setStatus(status);
     }
 
     public void removeById(int id) {
         tasks.remove(id);
         epicTasks.remove(id);
+        subTasks.remove(id);
 
         for (int i : epicTasks.keySet()) {
             epicTasks.get(i).getAllTasks().remove(id);
         }
     }
 
-    public Map<Integer, Task> getTasksOfEpic(int id) {
+    public Map<Integer, Subtask> getTasksOfEpic(int id) {
          if (epicTasks.containsKey(id)) {
             return epicTasks.get(id).getAllTasks();
          }
