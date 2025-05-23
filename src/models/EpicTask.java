@@ -19,7 +19,6 @@ public class EpicTask extends AbstractTask {
 
     public void addTask(Subtask task) {
         tasks.put(task.getId(), task);
-        checkStatus();
     }
 
     public Subtask getTaskById(int id) {
@@ -35,12 +34,7 @@ public class EpicTask extends AbstractTask {
     }
 
     public void removeTask(int id) {
-        if (tasks.containsKey(id)) {
-            tasks.remove(id);
-            checkStatus();
-        }
-
-        throw new IllegalArgumentException("ID " + id + " doesn't exist.");
+        tasks.remove(id);
     }
 
     public int getCountTasks() {
@@ -103,7 +97,7 @@ public class EpicTask extends AbstractTask {
         return printStr.toString();
     }
 
-    private void checkStatus() {
+    public void checkStatus() {
         int countNew = 0;
         int countDone = 0;
 

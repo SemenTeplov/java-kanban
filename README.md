@@ -27,7 +27,7 @@ if id doesn't exist throw exception; method getAllTasks, returns all tasks of th
 gets count elements in the epic; method removeTask, removes task in the epic by id, if id doesn't exist throw exception; 
 private method checkStatus, checks status for each tasks in the epic.
 
-### Manager
+### managers.InMemoryTaskManager
 Class manager has one constructor, two maps of tasks and a counter.
 
 Added method getNewId, it gets id for tasks and epics; getAll, it returns map with all tasks and epics; removeAll, 
@@ -37,7 +37,7 @@ tasks in any epic; removeById, removes a task or an epic by id, removes even tas
 of tasks in the epic, if the epic with id doesn't exist, throws exception.
 
 ### TestManager
-Class TestManager, is located in the folder tests, checks class Manager.
+Class TestManager, is located in the folder tests, checks class managers.InMemoryTaskManager.
 
 ### Note
 Have been two classes: EpicTask and Task, because functions Task and Subtask are similar.
