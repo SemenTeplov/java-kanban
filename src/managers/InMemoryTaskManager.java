@@ -1,5 +1,6 @@
 package managers;
 
+import history.HistoryManager;
 import models.*;
 
 import java.util.HashMap;
@@ -9,12 +10,14 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasks;
     private final Map<Integer, EpicTask> epicTasks;
     private final Map<Integer, Subtask> subTasks;
+    private final HistoryManager hManager;
     private int currentId;
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
         epicTasks = new HashMap<>();
         subTasks = new HashMap<>();
+        hManager = Managers.getDefaultHistory();
         currentId = 1;
     }
 
@@ -26,26 +29,33 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Map<Integer, Task> getAllTasks() {
         for (Task task : tasks.values()) {
-            Managers.getDefaultHistory().add(task);
+            hManager.add(task);
         }
 
         return tasks;
     }
 
+    @Override
     public Map<Integer, EpicTask> getAllEpics() {
         for (EpicTask epicTask : epicTasks.values()) {
-            Managers.getDefaultHistory().add(epicTask);
+            hManager.add(epicTask);
         }
 
         return epicTasks;
     }
 
+    @Override
     public Map<Integer, Subtask> getAllSubtasks() {
         for (Subtask subTask : subTasks.values()) {
-            Managers.getDefaultHistory().add(subTask);
+            hManager.add(subTask);
         }
 
         return subTasks;
+    }
+
+    @Override
+    public HistoryManager getHistory() {
+        return hManager;
     }
 
     @Override
@@ -59,7 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getById(int id) {
         if (tasks.containsKey(id)) {
-            Managers.getDefaultHistory().add(tasks.get(id));
+            hManager.add(tasks.get(id));
 
             return tasks.get(id);
         }
@@ -70,7 +80,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtaskById(int id) {
         if (subTasks.containsKey(id)) {
-            Managers.getDefaultHistory().add(subTasks.get(id));
+            hManager.add(subTasks.get(id));
 
             return subTasks.get(id);
         }
@@ -81,7 +91,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public EpicTask getEpicById(int id) {
         if (epicTasks.containsKey(id)) {
-            Managers.getDefaultHistory().add(epicTasks.get(id));
+            hManager.add(epicTasks.get(id));
 
             return epicTasks.get(id);
         }

@@ -1,5 +1,6 @@
 package managers;
 
+import history.HistoryManager;
 import models.*;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public interface TaskManager {
     Subtask getSubtaskById(int id);
 
     EpicTask getEpicById(int id);
+
+    HistoryManager getHistory();
 
     void createTask(String name, String description);
 

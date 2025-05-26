@@ -1,3 +1,4 @@
+import history.HistoryManager;
 import managers.Managers;
 import managers.TaskManager;
 import models.AbstractTask;
@@ -8,19 +9,21 @@ import models.Task;
 public class Main {
 
     public static void main(String[] args) {
+        TaskManager tManager = Managers.getDefault();
+
         for (int i = 1; i < 6; i++) {
-            Managers.getDefault().createTask("Task" + i, "Something text");
-            Managers.getDefault().createEpicTask("Epic" + i, "Something text");
+            tManager.createTask("Task" + i, "Something text");
+            tManager.createEpicTask("Epic" + i, "Something text");
         }
 
-        for (int index : Managers.getDefault().getAllEpics().keySet()) {
-            Managers.getDefault().createSubtask(index, "Subtask" + index, "Something text");
+        for (int index : tManager.getAllEpics().keySet()) {
+            tManager.createSubtask(index, "Subtask" + index, "Something text");
         }
 
-        printAllTasks(Managers.getDefault());
+        printAllTasks(tManager, tManager.getHistory());
     }
 
-    private static void printAllTasks(TaskManager manager) {
+    private static void printAllTasks(TaskManager manager, HistoryManager hManager) {
         System.out.println("Задачи:");
         for (Task task : manager.getAllTasks().values()) {
             System.out.println(task);
@@ -39,7 +42,7 @@ public class Main {
         }
 
         System.out.println("История:");
-        for (AbstractTask task : Managers.getDefaultHistory().getHistory()) {
+        for (AbstractTask task : hManager.getHistory()) {
             System.out.println(task);
         }
     }
