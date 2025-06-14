@@ -3,7 +3,6 @@ package managers;
 import history.HistoryManager;
 import models.*;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public interface TaskManager {
