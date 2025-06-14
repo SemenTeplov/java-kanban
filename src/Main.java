@@ -1,48 +1,54 @@
-import history.HistoryManager;
 import managers.Managers;
 import managers.TaskManager;
 import models.AbstractTask;
-import models.EpicTask;
-import models.Subtask;
-import models.Task;
+
+import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
         TaskManager tManager = Managers.getDefault();
+        Random rand = new Random();
 
-        for (int i = 1; i < 6; i++) {
-            tManager.createTask("Task" + i, "Something text");
-            tManager.createEpicTask("Epic" + i, "Something text");
-        }
+        // Создание двух задач эпик с тремя подзадачами и один эпик без подзадач.
+        tManager.createEpicTask("Epic 1", "With subtasks");
+        tManager.createEpicTask("Epic 2", "With subtasks");
+        tManager.createEpicTask("Epic 3", "With subtasks");
+        tManager.createEpicTask("Epic 4", "Without subtasks");
 
-        for (int index : tManager.getAllEpics().keySet()) {
-            tManager.createSubtask(index, "Subtask" + index, "Something text");
-        }
-
-        printAllTasks(tManager, tManager.getHistory());
-    }
-
-    private static void printAllTasks(TaskManager manager, HistoryManager hManager) {
-        System.out.println("Задачи:");
-        for (Task task : manager.getAllTasks().values()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (EpicTask epic : manager.getAllEpics().values()) {
-            System.out.println(epic);
-
-            for (int index : epic.getAllTasks().keySet()) {
-                System.out.println("--> " + epic.getTaskById(index));
+        for (int i = 1; i <= 3; i++) {
+            for (int l = 1; l <=3; l++) {
+                tManager.createSubtask(i, "subtask " + l, "something text");
             }
         }
-        System.out.println("Подзадачи:");
-        for (Subtask subtask : manager.getAllSubtasks().values()) {
-            System.out.println(subtask);
+
+        // Запрос задач
+        for (int i = 0; i < 5; i++) {
+            System.out.println(tManager.getEpicById(rand.nextInt(1, 5)));
+            System.out.println(tManager.getSubtaskById(rand.nextInt(5, 13)));
+        }
+        System.out.println();
+
+        // Проверка истории на отсутствие повторов
+        for (AbstractTask task : tManager.getHistory().getHistory()) {
+            System.out.println(task);
         }
 
-        System.out.println("История:");
-        for (AbstractTask task : hManager.getHistory()) {
+        System.out.println();
+
+        // Проверка на удаление задачи из истории
+        tManager.getHistory().remove(tManager.getHistory().getHistory().get(2));
+
+        for (AbstractTask task : tManager.getHistory().getHistory()) {
+            System.out.println(task);
+        }
+
+        System.out.println();
+
+        // Проверка удаления epica с его подзадачами
+        tManager.removeById(2);
+
+        for (AbstractTask task : tManager.getHistory().getHistory()) {
             System.out.println(task);
         }
     }
