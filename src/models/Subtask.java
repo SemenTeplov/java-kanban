@@ -1,33 +1,33 @@
 package models;
 
-public class Subtask extends AbstractTask{
-    private EpicTask Owner;
+public class Subtask extends AbstractTask {
+    private final EpicTask owner;
 
-    public Subtask(int id, EpicTask Owner, String name, String description) {
+    public Subtask(int id, EpicTask owner, String name, String description) {
         super(id, name, description);
-        this.Owner = Owner;
-        Owner.checkStatus();
+        this.owner = owner;
+        owner.checkStatus();
     }
 
     public Subtask(int id, Subtask task) {
         super(id, task.getName(), task.getDescription());
         setStatus(task.getStatus());
-        this.Owner = task.getOwner();
-        Owner.checkStatus();
+        this.owner = task.getOwner();
+        owner.checkStatus();
     }
 
     public int getIdOwner() {
-        return this.Owner.getId();
+        return this.owner.getId();
     }
 
     public EpicTask getOwner() {
-        return this.Owner;
+        return this.owner;
     }
 
     @Override
     public void setStatus(Status status) {
         super.status = status;
-        Owner.checkStatus();
+        owner.checkStatus();
     }
 
     @Override
