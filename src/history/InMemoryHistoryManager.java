@@ -8,16 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final Table table;
+    private final Table table = new Table();
 
     private Node first;
     private Node last;
     private Node current;
     private int size;
-
-    {
-        table= new Table();
-    }
 
     @Override
     public void add(AbstractTask task) {
@@ -89,17 +85,17 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     static class Table {
-        private final int ROW = 10;
-        private final int COL = 10;
+        private final int row = 10;
+        private final int col = 10;
         private final Node[][][] table;
 
-        {
-            int DEEP = 1;
-            table = new Node[ROW][COL][DEEP];
+        public Table() {
+            int deep = 1;
+            table = new Node[row][col][deep];
         }
 
         public Node getNode(int key) {
-            for (Node node : table[key % ROW][key % ROW / COL]) {
+            for (Node node : table[key % row][key % row / col]) {
                 if (node != null && node.getId() == key) {
                     return node;
                 }
@@ -109,7 +105,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         public void setNode(Node node) {
-            Node[] arrNodes = table[node.getId() % ROW][node.getId() % ROW / COL];
+            Node[] arrNodes = table[node.getId() % row][node.getId() % row / col];
             int prevLength = arrNodes.length;
 
             for (int i = 0; i < prevLength; i++) {
@@ -124,7 +120,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         public Node removeNode(Node node) {
-            Node[] nodes = table[node.getId() % ROW][node.getId() % ROW / COL];
+            Node[] nodes = table[node.getId() % row][node.getId() % row / col];
             Node tmpNode;
 
             for (int i = 0; i < nodes.length; i++) {
