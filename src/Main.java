@@ -17,7 +17,7 @@ public class Main {
         tManager.createEpicTask("Epic 4", "Without subtasks");
 
         for (int i = 1; i <= 3; i++) {
-            for (int l = 1; l <=3; l++) {
+            for (int l = 1; l <= 3; l++) {
                 tManager.createSubtask(i, "subtask " + l, "something text");
             }
         }
