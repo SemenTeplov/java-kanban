@@ -71,6 +71,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         remove(new Node(task.getId(), task, null, null));
     }
 
+    public int getSize() {
+        return this.size;
+    }
+
     @Override
     public List<AbstractTask> getHistory() {
         ArrayList<AbstractTask> list = new ArrayList<>();

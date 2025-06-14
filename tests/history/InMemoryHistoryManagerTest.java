@@ -20,6 +20,11 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void getSize() {
+        Assertions.assertEquals(manager.getHistory().size(), manager.getSize());
+    }
+
+    @Test
     void addEsistsInBegine() {
         String expected = manager.getHistory().toString();
 
