@@ -4,12 +4,12 @@ import models.AbstractTask;
 import history.models.Node;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final Table table = new Table();
-
+    private final Map<Integer, Node> nodeHashMap = new HashMap<>();
     private Node first;
     private Node last;
     private Node current;
@@ -23,48 +23,33 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.current = new Node(task.getId(), task, null, null);
             this.first = this.current;
         } else {
-            if (table.getNode(task.getId()) != null) {
-                remove(table.getNode(task.getId()));
+            if (nodeHashMap.containsKey(task.getId())) {
+                remove(nodeHashMap.get(task.getId()));
                 this.current = this.last;
             }
 
             this.current = new Node(task.getId(), task, this.current, null);
-            this.current.getPrev().setNext(this.current);
+
+            if (this.first == null) {
+                this.first = this.current;
+            }
+
+            if (this.current.getPrev() != null) {
+                this.current.getPrev().setNext(this.current);
+            }
         }
 
         this.last = this.current;
-        this.table.setNode(this.current);
+        this.nodeHashMap.put(this.current.getId(), this.current);
         this.size++;
     }
 
     @Override
-    public void remove(Node node) {
-        Node tmpNode = table.removeNode(node);
-
-        if (tmpNode != null) {
-            this.size--;
-
-            if (tmpNode.getPrev() != null) {
-                tmpNode.getPrev().setNext(tmpNode.getNext());
-
-                if (tmpNode.getNext() == null) {
-                    this.last = tmpNode.getPrev();
-                }
-            }
-
-            if (tmpNode.getNext() != null) {
-                tmpNode.getNext().setPrev(tmpNode.getPrev());
-
-                if (tmpNode.getPrev() == null) {
-                    this.first = tmpNode.getNext();
-                }
-            }
-        }
-    }
-
-    @Override
     public void remove(AbstractTask task) {
-        remove(new Node(task.getId(), task, null, null));
+        if (nodeHashMap.containsKey(task.getId())) {
+            remove(nodeHashMap.get(task.getId()));
+            nodeHashMap.remove(task.getId());
+        }
     }
 
     public int getSize() {
@@ -84,55 +69,30 @@ public class InMemoryHistoryManager implements HistoryManager {
         return list;
     }
 
-    static class Table {
-        private final int row = 10;
-        private final int col = 10;
-        private final Node[][][] table;
+    private void remove(Node node) {
+        if (node != null && nodeHashMap.containsKey(node.getId())) {
+            this.size--;
 
-        public Table() {
-            int deep = 1;
-            table = new Node[row][col][deep];
-        }
+            if (node.getPrev() != null) {
+                node.getPrev().setNext(node.getNext());
 
-        public Node getNode(int key) {
-            for (Node node : table[key % row][key % row / col]) {
-                if (node != null && node.getId() == key) {
-                    return node;
+                if (node.getNext() == null) {
+                    this.last = node.getPrev();
                 }
             }
 
-            return null;
-        }
+            if (node.getNext() != null) {
+                node.getNext().setPrev(node.getPrev());
 
-        public void setNode(Node node) {
-            Node[] arrNodes = table[node.getId() % row][node.getId() % row / col];
-            int prevLength = arrNodes.length;
-
-            for (int i = 0; i < prevLength; i++) {
-                if (arrNodes[i] == null) {
-                    arrNodes[i] = node;
-                    return;
+                if (node.getPrev() == null) {
+                    this.first = node.getNext();
                 }
             }
-
-            arrNodes = Arrays.copyOf(arrNodes, prevLength * 2);
-            arrNodes[prevLength] = node;
         }
 
-        public Node removeNode(Node node) {
-            Node[] nodes = table[node.getId() % row][node.getId() % row / col];
-            Node tmpNode;
-
-            for (int i = 0; i < nodes.length; i++) {
-                if (nodes[i] != null && nodes[i].getId() == node.getId()) {
-                    tmpNode = nodes[i];
-                    nodes[i] = null;
-
-                    return tmpNode;
-                }
-            }
-
-            return null;
+        if (size == 0) {
+            this.first = null;
+            this.last = null;
         }
     }
 }
