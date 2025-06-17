@@ -2,10 +2,12 @@ package history;
 
 import models.AbstractTask;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface HistoryManager {
     void add(AbstractTask task);
 
-    ArrayList<AbstractTask> getHistory();
+    void remove(AbstractTask task);
+
+    List<AbstractTask> getHistory();
 }
