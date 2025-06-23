@@ -5,12 +5,14 @@ public abstract class AbstractTask {
     private String name;
     private String description;
     protected Status status;
+    protected Types type;
 
-    public AbstractTask(int id, String name, String description) {
+    public AbstractTask(int id, String name, String description, Types type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = Status.IN_PROGRESS;
+        this.type = type;
     }
 
     public int getId() {

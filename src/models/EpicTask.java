@@ -7,12 +7,12 @@ public class EpicTask extends AbstractTask {
     private final Map<Integer, Subtask> tasks;
 
     public EpicTask(int id, String name, String description) {
-        super(id, name, description);
+        super(id, name, description, Types.EPIC);
         tasks = new HashMap<>();
     }
 
     public EpicTask(int id, EpicTask task) {
-        super(id, task.getName(), task.getDescription());
+        super(id, task.getName(), task.getDescription(), Types.EPIC);
         setStatus(task.getStatus());
         tasks = new HashMap<>();
     }
@@ -83,18 +83,7 @@ public class EpicTask extends AbstractTask {
 
     @Override
     public String toString() {
-        StringBuilder printStr =
-                new StringBuilder(String.format("%d %s %s", getId(), getName(), getDescription()));
-
-        if (!tasks.isEmpty()) {
-            printStr.append(" subtasks: ");
-
-            for (int i : tasks.keySet()) {
-                printStr.append(tasks.get(i).toString()).append(" ");
-            }
-        }
-
-        return printStr.toString();
+        return String.format("%d,%s,%s,%s,%s", getId(), type, getName(), status, getDescription());
     }
 
     public void checkStatus() {

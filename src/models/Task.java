@@ -2,11 +2,11 @@ package models;
 
 public class Task extends AbstractTask {
     public Task(int id, String name, String description) {
-        super(id, name, description);
+        super(id, name, description, Types.TASK);
     }
 
     public Task(int id, Task task) {
-        super(id, task.getName(), task.getDescription());
+        super(id, task.getName(), task.getDescription(), Types.TASK);
         setStatus(task.getStatus());
     }
 
@@ -50,6 +50,6 @@ public class Task extends AbstractTask {
 
     @Override
     public String toString() {
-        return String.format("%d %s %s", getId(), getName(), getDescription());
+        return String.format("%d,%s,%s,%s,%s", getId(), type, getName(), status, getDescription());
     }
 }

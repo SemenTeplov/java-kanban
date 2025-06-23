@@ -20,6 +20,6 @@ class SubtaskTest {
 
     @Test
     void getOwner() {
-        Assertions.assertEquals("1 Epic Text subtasks: 2 Subtask1 Text ", subtask.getOwner().toString());
+        Assertions.assertEquals("1,EPIC,Epic,NEW,Text", subtask.getOwner().toString());
     }
 }
