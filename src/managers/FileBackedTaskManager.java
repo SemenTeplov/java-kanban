@@ -1,17 +1,14 @@
 package managers;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.CSVWriterBuilder;
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import managers.exceptions.ManagerLoadException;
 import managers.exceptions.ManagerSaveException;
 import models.*;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -111,30 +108,29 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String path = pathToFile;
         List<AbstractTask> list = getListAllTasks();
 
-        try (ICSVWriter csv = new CSVWriterBuilder(new FileWriter(path)).withSeparator(',').build()) {
-            String[] headers = {"id", "type", "name", "status", "description", "epic"};
-            csv.writeNext(headers);
+        try {
+            StringBuilder strings = new StringBuilder("id,type,name,status,description,epic\n");
 
             for (AbstractTask task : list) {
-                String[] strings = task.toString().split(",");
-                csv.writeNext(strings);
+                strings.append(task.toString()).append("\n");
             }
+
+            Files.writeString(Path.of(path), strings, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
         } catch (IOException e) {
-            throw new ManagerSaveException("The data don,t save.");
+            throw new ManagerSaveException(e.getMessage());
         }
     }
 
     public static void loadFromFile(String path) {
-        try (CSVReader csv = new CSVReaderBuilder(new FileReader(path)).build()) {
+        try {
+            List<String> listStrings = Files.readAllLines(Path.of(path));
             list.clear();
-            csv.readNext();
-            String[] values;
 
-            while ((values = csv.readNext()) != null) {
-                list.add(values);
+            for (int i = 1; i < listStrings.size(); i++) {
+                list.add(listStrings.get(i).split(","));
             }
-        } catch (IOException | CsvValidationException e) {
-            throw new ManagerLoadException("There isn't the file.");
+        } catch (IOException e) {
+            throw new ManagerLoadException(e.getMessage());
         }
     }
 
