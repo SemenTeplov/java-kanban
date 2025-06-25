@@ -13,47 +13,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
-    private static String pathToFile = "resourses/backup.csv";
-    private static final List<String[]> list = new LinkedList<>();
+    private static String pathToFile;
 
-    static {
-        loadFromFile(pathToFile);
-    }
-
-    public FileBackedTaskManager() {
+    public FileBackedTaskManager(String path) {
         super();
-
-        if (!list.isEmpty()) {
-            for (String[] arr : list) {
-                int bId = Integer.parseInt(arr[0]);
-                String bType = arr[1];
-                String bName = arr[2];
-                String bStatus = arr[3];
-                String bDescription = arr[4];
-
-                if (bType.equals(Types.TASK.toString())) {
-                    Task task = new Task(bId, bName, bDescription);
-
-                    setBackedTaskStatus(task, bStatus);
-                    tasks.put(bId, task);
-                } else if (bType.equals(Types.EPIC.toString())) {
-                    EpicTask epic = new EpicTask(bId, bName, bDescription);
-
-                    setBackedTaskStatus(epic, bStatus);
-                    epicTasks.put(bId, epic);
-                } else if (bType.equals(Types.SUBTASK.toString())) {
-                    int bIdEpic = Integer.parseInt(arr[5]);
-                    Subtask sub = new Subtask(bId,
-                            epicTasks.get(bIdEpic), bName, bDescription);
-
-                    setBackedTaskStatus(sub, bStatus);
-                    subTasks.put(sub.getId(), sub);
-                    epicTasks.get(bIdEpic).addTask(sub);
-                }
-
-                currentId = bId + 1;
-            }
-        }
+        pathToFile = path;
+        loadFromFile(pathToFile);
     }
 
     @Override
@@ -105,17 +70,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     private void save() {
-        String path = pathToFile;
         List<AbstractTask> list = getListAllTasks();
 
         try {
+            Files.delete(Path.of(pathToFile));
+            Files.createFile(Path.of(pathToFile));
             StringBuilder strings = new StringBuilder("id,type,name,status,description,epic\n");
 
             for (AbstractTask task : list) {
                 strings.append(task.toString()).append("\n");
             }
 
-            Files.writeString(Path.of(path), strings, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+            Files.writeString(Path.of(pathToFile), strings, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
         } catch (IOException e) {
             throw new ManagerSaveException(e.getMessage());
         }
@@ -124,10 +90,39 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public static void loadFromFile(String path) {
         try {
             List<String> listStrings = Files.readAllLines(Path.of(path));
-            list.clear();
 
-            for (int i = 1; i < listStrings.size(); i++) {
-                list.add(listStrings.get(i).split(","));
+            if (!listStrings.isEmpty()) {
+                for (String str : listStrings.subList(1, listStrings.size())) {
+                    String[] arr = str.split(",");
+
+                    int bId = Integer.parseInt(arr[0]);
+                    String bType = arr[1];
+                    String bName = arr[2];
+                    String bStatus = arr[3];
+                    String bDescription = arr[4];
+
+                    if (bType.equals(Types.TASK.toString())) {
+                        Task task = new Task(bId, bName, bDescription);
+
+                        setBackedTaskStatus(task, bStatus);
+                        tasks.put(bId, task);
+                    } else if (bType.equals(Types.EPIC.toString())) {
+                        EpicTask epic = new EpicTask(bId, bName, bDescription);
+
+                        setBackedTaskStatus(epic, bStatus);
+                        epicTasks.put(bId, epic);
+                    } else if (bType.equals(Types.SUBTASK.toString())) {
+                        int bIdEpic = Integer.parseInt(arr[5]);
+                        Subtask sub = new Subtask(bId,
+                                epicTasks.get(bIdEpic), bName, bDescription);
+
+                        setBackedTaskStatus(sub, bStatus);
+                        subTasks.put(sub.getId(), sub);
+                        epicTasks.get(bIdEpic).addTask(sub);
+                    }
+
+                    currentId = bId + 1;
+                }
             }
         } catch (IOException e) {
             throw new ManagerLoadException(e.getMessage());
@@ -148,7 +143,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return list;
     }
 
-    private void setBackedTaskStatus(AbstractTask task, String status) {
+    private static void setBackedTaskStatus(AbstractTask task, String status) {
         switch (status) {
             case "NEW" -> task.setStatus(Status.NEW);
             case "IN_PROGRESS" -> task.setStatus(Status.IN_PROGRESS);

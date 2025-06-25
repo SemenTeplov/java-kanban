@@ -4,20 +4,21 @@ import models.AbstractTask;
 
 public class MainTestBackUp {
     public static void main(String[] args) {
+        String pathToBackup = "resourses/backup.csv";
+
         // Загрузка пустого файла Backup
-        FileBackedTaskManager tManagerOrigin1 = new FileBackedTaskManager();
+        FileBackedTaskManager tManagerOrigin1 = new FileBackedTaskManager(pathToBackup);
         tManagerOrigin1.removeAll();
 
         System.out.println("Пустой список");
 
-        FileBackedTaskManager.loadFromFile("resourses/backup.csv");
-        FileBackedTaskManager tManagerTest1 = new FileBackedTaskManager();
+        FileBackedTaskManager tManagerTest1 = new FileBackedTaskManager(pathToBackup);
         printTasks(tManagerTest1);
 
         System.out.println("-".repeat(20));
 
         // Сохранение нескольких задач и загрузка
-        FileBackedTaskManager tManagerOrigin2 = new FileBackedTaskManager();
+        FileBackedTaskManager tManagerOrigin2 = new FileBackedTaskManager(pathToBackup);
         tManagerOrigin2.removeAll();
 
         tManagerOrigin2.createEpicTask("Epic 1", "With subtasks");
@@ -33,8 +34,8 @@ public class MainTestBackUp {
 
         System.out.println("Полный список");
 
-        FileBackedTaskManager.loadFromFile("resourses/backup.csv");
-        FileBackedTaskManager tManagerTest2 = new FileBackedTaskManager();
+        FileBackedTaskManager.loadFromFile(pathToBackup);
+        FileBackedTaskManager tManagerTest2 = new FileBackedTaskManager(pathToBackup);
         printTasks(tManagerTest2);
 
         System.out.println("-".repeat(20));
