@@ -34,7 +34,6 @@ public class MainTestBackUp {
 
         System.out.println("Полный список");
 
-        FileBackedTaskManager.loadFromFile(pathToBackup);
         FileBackedTaskManager tManagerTest2 = new FileBackedTaskManager(pathToBackup);
         printTasks(tManagerTest2);
 

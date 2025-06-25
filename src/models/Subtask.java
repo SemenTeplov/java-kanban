@@ -65,6 +65,6 @@ public class Subtask extends AbstractTask {
 
     @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s,%d", getId(), type, getName(), status, getDescription(), getIdOwner());
+        return String.format("%d, %s, %s, %s, %s, %d", getId(), type, getName(), status, getDescription(), getIdOwner());
     }
 }

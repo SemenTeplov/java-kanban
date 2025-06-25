@@ -50,6 +50,6 @@ public class Task extends AbstractTask {
 
     @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s", getId(), type, getName(), status, getDescription());
+        return String.format("%d, %s, %s, %s, %s", getId(), type, getName(), status, getDescription());
     }
 }
