@@ -1,6 +1,6 @@
 package managers;
 
-import managers.utiles.csvManager;
+import managers.utiles.CSVManager;
 import models.*;
 
 import java.util.List;
@@ -17,53 +17,53 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     @Override
     public void createTask(String name, String description) {
         super.createTask(name, description);
-        csvManager.save(pathToFile, this);
+        CSVManager.save(pathToFile, this);
     }
 
     @Override
     public void createSubtask(int idOwner, String name, String description) {
         super.createSubtask(idOwner, name, description);
-        csvManager.save(pathToFile, this);
+        CSVManager.save(pathToFile, this);
     }
 
     @Override
     public void createEpicTask(String name, String description) {
         super.createEpicTask(name, description);
-        csvManager.save(pathToFile, this);
+        CSVManager.save(pathToFile, this);
     }
 
     @Override
     public void updateTask(int id, String name, String description, Status status) {
         super.updateTask(id, name, description, status);
-        csvManager.save(pathToFile, this);
+        CSVManager.save(pathToFile, this);
     }
 
     @Override
     public void updateEpicTask(int id, String name, String description, Status status) {
         super.updateEpicTask(id, name, description, status);
-        csvManager.save(pathToFile, this);
+        CSVManager.save(pathToFile, this);
     }
 
     @Override
     public void updateSubtask(int id, String name, String description, Status status) {
         super.updateSubtask(id, name, description, status);
-        csvManager.save(pathToFile, this);
+        CSVManager.save(pathToFile, this);
     }
 
     @Override
     public void removeAll() {
         super.removeAll();
-        csvManager.save(pathToFile, this);
+        CSVManager.save(pathToFile, this);
     }
 
     @Override
     public void removeById(int id) {
         super.removeById(id);
-        csvManager.save(pathToFile, this);
+        CSVManager.save(pathToFile, this);
     }
 
     private void getData() {
-        List<String> listStrings = csvManager.loadFromFile(pathToFile);
+        List<String> listStrings = CSVManager.loadFromFile(pathToFile);
 
         if (!listStrings.isEmpty()) {
             for (String str : listStrings.subList(1, listStrings.size())) {

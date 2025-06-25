@@ -13,7 +13,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.LinkedList;
 import java.util.List;
 
-public class csvManager {
+public class CSVManager {
     public static void save(String pathToFile, TaskManager manager) {
         List<AbstractTask> list = getListAllTasks(manager);
         Path path = Path.of(pathToFile);
