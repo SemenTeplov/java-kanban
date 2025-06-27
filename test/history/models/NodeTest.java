@@ -37,7 +37,7 @@ public class NodeTest {
 
     @Test
     void getTask() {
-        String expected = "0 Task Something description";
+        String expected = "0, TASK, Task, IN_PROGRESS, Something description";
 
         Assertions.assertEquals(expected, first.getTask().toString());
     }
@@ -48,7 +48,8 @@ public class NodeTest {
 
         String actual = "current node = " + node.getId() + " " + node.getTask().toString() + ", ";
         actual += "prev node = " + node.getPrev().getId() + " " + node.getPrev().getTask().toString();
-        String expected = "current node = 1 1 Task1 Something description, prev node = 0 0 Task Something description";
+        String expected = "current node = 1 1, TASK, Task1, IN_PROGRESS, Something description, prev node = 0 0, " +
+                "TASK, Task, IN_PROGRESS, Something description";
 
         Assertions.assertEquals(expected, actual);
     }
@@ -59,7 +60,8 @@ public class NodeTest {
 
         String actual = "current node = " + node.getId() + " " + node.getTask().toString() + ", ";
         actual += "prev node = " + node.getNext().getId() + " " + node.getNext().getTask().toString();
-        String expected = "current node = 0 0 Task Something description, prev node = 1 1 Task1 Something description";
+        String expected = "current node = 0 0, TASK, Task, IN_PROGRESS, Something description, prev node = 1 1, " +
+                "TASK, Task1, IN_PROGRESS, Something description";
 
         Assertions.assertEquals(expected, actual);
     }

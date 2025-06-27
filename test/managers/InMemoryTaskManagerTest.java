@@ -54,21 +54,22 @@ class InMemoryTaskManagerTest {
     void updateTask() {
         manger.updateTask(1, "ChangedTask", "ChangedText", Status.NEW);
 
-        Assertions.assertEquals("1 ChangedTask ChangedText", manger.getById(1).toString());
+        Assertions.assertEquals("1, TASK, ChangedTask, NEW, ChangedText", manger.getById(1).toString());
     }
 
     @Test
     void updateEpicTask() {
         manger.updateEpicTask(2, "ChangedEpicTask", "ChangedText", Status.NEW);
 
-        Assertions.assertEquals("2 ChangedEpicTask ChangedText subtasks: 11 Subtask2 Something text ", manger.getEpicById(2).toString());
+        Assertions.assertEquals("2, EPIC, ChangedEpicTask, NEW, ChangedText", manger.getEpicById(2).toString());
     }
 
     @Test
     void updateSubtask() {
         manger.updateSubtask(13, "ChangedSubTask", "ChangedText", Status.NEW);
 
-        Assertions.assertEquals("13 ChangedSubTask ChangedText", manger.getSubtaskById(13).toString());
+        Assertions.assertEquals("13, SUBTASK, ChangedSubTask, NEW, ChangedText, 6",
+                manger.getSubtaskById(13).toString());
     }
 
     @Test

@@ -16,7 +16,7 @@ class EpicTaskTest {
 
     @Test
     void getTaskById() {
-        Assertions.assertEquals("3 Subtask2 Text", task.getTaskById(3).toString());
+        Assertions.assertEquals("3, SUBTASK, Subtask2, IN_PROGRESS, Text, 1", task.getTaskById(3).toString());
     }
 
     @Test

@@ -4,13 +4,13 @@ public class Subtask extends AbstractTask {
     private final EpicTask owner;
 
     public Subtask(int id, EpicTask owner, String name, String description) {
-        super(id, name, description);
+        super(id, name, description, Types.SUBTASK);
         this.owner = owner;
         owner.checkStatus();
     }
 
     public Subtask(int id, Subtask task) {
-        super(id, task.getName(), task.getDescription());
+        super(id, task.getName(), task.getDescription(), Types.SUBTASK);
         setStatus(task.getStatus());
         this.owner = task.getOwner();
         owner.checkStatus();
@@ -65,6 +65,6 @@ public class Subtask extends AbstractTask {
 
     @Override
     public String toString() {
-        return String.format("%d %s %s", getId(), getName(), getDescription());
+        return String.format("%d, %s, %s, %s, %s, %d", getId(), type, getName(), status, getDescription(), getIdOwner());
     }
 }

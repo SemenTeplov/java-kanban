@@ -7,18 +7,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, EpicTask> epicTasks;
-    private final Map<Integer, Subtask> subTasks;
+    protected static final Map<Integer, Task> tasks;
+    protected static final Map<Integer, EpicTask> epicTasks;
+    protected static final Map<Integer, Subtask> subTasks;
     private final HistoryManager hManager;
-    private int currentId;
+    protected static Integer currentId;
 
-    public InMemoryTaskManager() {
+    static {
         tasks = new HashMap<>();
         epicTasks = new HashMap<>();
         subTasks = new HashMap<>();
-        hManager = Managers.getDefaultHistory();
         currentId = 1;
+    }
+
+    public InMemoryTaskManager() {
+        hManager = Managers.getDefaultHistory();
     }
 
     @Override
