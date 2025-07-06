@@ -2,8 +2,6 @@ package models;
 
 import managers.utiles.DateTimeFormatPatterns;
 
-import java.time.LocalDateTime;
-
 public class Subtask extends AbstractTask {
     private final EpicTask owner;
 
