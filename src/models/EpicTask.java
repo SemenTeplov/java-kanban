@@ -1,5 +1,7 @@
 package models;
 
+import managers.utiles.DateTimeFormatPatterns;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,21 +46,17 @@ public class EpicTask extends AbstractTask {
     @Override
     public void setStatus(Status status) {
         if (status == Status.NEW || status == Status.DONE) {
-            for (int i : tasks.keySet()) {
-                tasks.get(i).setStatus(status);
-            }
+            tasks.keySet().forEach(item -> tasks.get(item).setStatus(status));
         }
 
         super.status = status;
+        super.definitionDurationIfStatusDone();
     }
 
     @Override
     public int hashCode() {
         int hashCode = super.hashCode();
-
-        for (int i : tasks.keySet()) {
-            hashCode += tasks.get(i).hashCode();
-        }
+        hashCode += tasks.keySet().stream().reduce(0, Integer::sum);
 
         return 32 * hashCode;
     }
@@ -83,7 +81,14 @@ public class EpicTask extends AbstractTask {
 
     @Override
     public String toString() {
-        return String.format("%d, %s, %s, %s, %s", getId(), type, getName(), status, getDescription());
+        return String.format("%d, %s, %s, %s, %s, %s, %s",
+                getId(),
+                super.startTime == null ? " " : super.startTime.format(DateTimeFormatPatterns.format),
+                super.startTime == null ? " " : super.getEndTime().format(DateTimeFormatPatterns.format),
+                type,
+                getName(),
+                status,
+                getDescription());
     }
 
     public void checkStatus() {
@@ -102,6 +107,7 @@ public class EpicTask extends AbstractTask {
             super.status = Status.NEW;
         } else if (countDone == tasks.size()) {
             super.status = Status.DONE;
+            super.definitionDurationIfStatusDone();
         } else {
             super.status = Status.IN_PROGRESS;
         }

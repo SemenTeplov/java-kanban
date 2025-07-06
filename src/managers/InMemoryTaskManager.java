@@ -1,22 +1,29 @@
 package managers;
 
 import history.HistoryManager;
+import managers.utiles.DateTimeFormatPatterns;
 import models.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class InMemoryTaskManager implements TaskManager {
     protected static final Map<Integer, Task> tasks;
     protected static final Map<Integer, EpicTask> epicTasks;
     protected static final Map<Integer, Subtask> subTasks;
-    private final HistoryManager hManager;
     protected static Integer currentId;
+
+    private static final Map<Long, Boolean> line;
+    private final HistoryManager hManager;
+    private final String originTime = "01.01.25|00:00:00";
 
     static {
         tasks = new HashMap<>();
         epicTasks = new HashMap<>();
         subTasks = new HashMap<>();
+        line = new HashMap<>();
         currentId = 1;
     }
 
@@ -31,27 +38,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Map<Integer, Task> getAllTasks() {
-        for (Task task : tasks.values()) {
-            hManager.add(task);
-        }
+        tasks.values().forEach(hManager::add);
 
         return tasks;
     }
 
     @Override
     public Map<Integer, EpicTask> getAllEpics() {
-        for (EpicTask epicTask : epicTasks.values()) {
-            hManager.add(epicTask);
-        }
+        epicTasks.values().forEach(hManager::add);
 
         return epicTasks;
     }
 
     @Override
     public Map<Integer, Subtask> getAllSubtasks() {
-        for (Subtask subTask : subTasks.values()) {
-            hManager.add(subTask);
-        }
+        subTasks.values().forEach(hManager::add);
 
         return subTasks;
     }
@@ -71,35 +72,26 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getById(int id) {
-        if (tasks.containsKey(id)) {
-            hManager.add(tasks.get(id));
+        Optional<Task> task = Optional.of(tasks.get(id));
+        hManager.add(task.orElseThrow(IllegalArgumentException::new));
 
-            return tasks.get(id);
-        }
-
-        throw new IllegalArgumentException("ID " + id + " doesn't exist.");
+        return task.get();
     }
 
     @Override
     public Subtask getSubtaskById(int id) {
-        if (subTasks.containsKey(id)) {
-            hManager.add(subTasks.get(id));
+        Optional<Subtask> task = Optional.of(subTasks.get(id));
+        hManager.add(task.orElseThrow(IllegalArgumentException::new));
 
-            return subTasks.get(id);
-        }
-
-        throw new IllegalArgumentException("ID " + id + " doesn't exist.");
+        return task.get();
     }
 
     @Override
     public EpicTask getEpicById(int id) {
-        if (epicTasks.containsKey(id)) {
-            hManager.add(epicTasks.get(id));
+        Optional<EpicTask> task = Optional.of(epicTasks.get(id));
+        hManager.add(task.orElseThrow(IllegalArgumentException::new));
 
-            return epicTasks.get(id);
-        }
-
-        throw new IllegalArgumentException("ID " + id + " doesn't exist.");
+        return task.get();
     }
 
     @Override
@@ -109,14 +101,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubtask(int idOwner, String name, String description) {
-        if (!epicTasks.containsKey(idOwner)) {
-            throw new IllegalArgumentException("ID " + idOwner + " doesn't exist.");
-        }
+        Optional<EpicTask> oTask = Optional.of(epicTasks.get(idOwner));
+        EpicTask task = oTask.orElseThrow(IllegalArgumentException::new);
 
-        Subtask task = new Subtask(currentId++, epicTasks.get(idOwner), name, description);
+        Subtask subtask = new Subtask(currentId++, epicTasks.get(idOwner), name, description);
 
-        subTasks.put(task.getId(), task);
-        epicTasks.get(idOwner).addTask(task);
+        subTasks.put(subtask.getId(), subtask);
+        task.addTask(subtask);
     }
 
     @Override
@@ -128,27 +119,41 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(int id, String name, String description, Status status) {
         Task task = getById(id);
 
-        task.setName(name);
-        task.setDescription(description);
-        task.setStatus(status);
+        updateTask(task, name, description, status);
     }
 
     @Override
     public void updateEpicTask(int id, String name, String description, Status status) {
         EpicTask task = getEpicById(id);
 
-        task.setName(name);
-        task.setDescription(description);
-        task.setStatus(status);
+        updateTask(task, name, description, status);
     }
 
     @Override
     public void updateSubtask(int id, String name, String description, Status status) {
         Subtask task = getSubtaskById(id);
 
-        task.setName(name);
-        task.setDescription(description);
-        task.setStatus(status);
+        updateTask(task, name, description, status);
+    }
+
+    @Override
+    public void setDateTime(int id, String start) {
+        if (!start.isBlank()) {
+            if (!isTasksOverlay(start)) {
+                if (tasks.containsKey(id)) {
+                    tasks.get(id).setDateTime(start);
+                } else if (epicTasks.containsKey(id)) {
+                    epicTasks.get(id).setDateTime(start);
+                } else if (subTasks.containsKey(id)) {
+                    subTasks.get(id).setDateTime(start);
+                }
+
+                line.put(Duration.between(LocalDateTime.parse(start, DateTimeFormatPatterns.format),
+                        LocalDateTime.parse(originTime, DateTimeFormatPatterns.format)).toMinutes() / 10, true);
+            } else {
+                System.out.println("Time of task is overlay");
+            }
+        }
     }
 
     @Override
@@ -161,11 +166,11 @@ public class InMemoryTaskManager implements TaskManager {
             subTasks.get(id).getOwner().removeTask(id);
             subTasks.remove(id);
         } else if (epicTasks.containsKey(id)) {
-            for (Subtask sub : epicTasks.get(id).getAllTasks().values()) {
+            epicTasks.get(id).getAllTasks().values().forEach(sub -> {
                 hManager.remove(sub);
                 epicTasks.get(id).getTaskById(sub.getId());
                 subTasks.remove(sub.getId());
-            }
+            });
 
             hManager.remove(epicTasks.remove(id));
             epicTasks.remove(id);
@@ -174,10 +179,40 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Map<Integer, Subtask> getTasksOfEpic(int id) {
-         if (epicTasks.containsKey(id)) {
-            return epicTasks.get(id).getAllTasks();
-         }
+        Optional<EpicTask> task = Optional.of(epicTasks.get(id));
 
-        throw new IllegalArgumentException("ID " + id + " doesn't exist.");
+        return task.orElseThrow(IllegalArgumentException::new).getAllTasks();
+    }
+
+    @Override
+    public Set<AbstractTask> getPrioritizedTasks() {
+        Set<AbstractTask> tasks = new TreeSet<>((t1, t2) ->
+                t2.getStartTime().compareTo(t1.getStartTime()));
+
+        tasks.addAll(Stream.concat(Stream.concat(this.getAllTasks().values().stream(),
+                this.getAllSubtasks().values().stream()),
+                this.getAllEpics().values().stream()).filter(a -> a.getStartTime() != null).toList());
+
+        return tasks;
+    }
+
+    public boolean isTasksOverlay(String start) {
+        if (start.isEmpty()) {
+            return false;
+        } else {
+            if (line.containsKey(Duration.between(LocalDateTime.parse(start, DateTimeFormatPatterns.format),
+                    LocalDateTime.parse(originTime, DateTimeFormatPatterns.format)).toMinutes() / 10)) {
+
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    private void updateTask(AbstractTask task, String name, String description, Status status) {
+        task.setName(name);
+        task.setDescription(description);
+        task.setStatus(status);
     }
 }

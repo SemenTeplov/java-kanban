@@ -4,6 +4,7 @@ import history.HistoryManager;
 import models.*;
 
 import java.util.Map;
+import java.util.Set;
 
 public interface TaskManager {
     int getNewId();
@@ -36,7 +37,11 @@ public interface TaskManager {
 
     void updateSubtask(int id, String name, String description, Status status);
 
+    void setDateTime(int id, String start);
+
     void removeById(int id);
 
     Map<Integer, Subtask> getTasksOfEpic(int id);
+
+    Set<AbstractTask> getPrioritizedTasks();
 }

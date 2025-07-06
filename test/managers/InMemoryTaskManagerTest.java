@@ -1,5 +1,6 @@
 package managers;
 
+import models.AbstractTask;
 import models.Status;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -54,27 +55,43 @@ class InMemoryTaskManagerTest {
     void updateTask() {
         manger.updateTask(1, "ChangedTask", "ChangedText", Status.NEW);
 
-        Assertions.assertEquals("1, TASK, ChangedTask, NEW, ChangedText", manger.getById(1).toString());
+        Assertions.assertEquals("1, 12.10.20|10:15:20, 12.10.20|10:15:20, TASK, ChangedTask, NEW, ChangedText", manger.getById(1).toString());
     }
 
     @Test
     void updateEpicTask() {
         manger.updateEpicTask(2, "ChangedEpicTask", "ChangedText", Status.NEW);
 
-        Assertions.assertEquals("2, EPIC, ChangedEpicTask, NEW, ChangedText", manger.getEpicById(2).toString());
+        Assertions.assertEquals("2,  ,  , EPIC, ChangedEpicTask, NEW, ChangedText", manger.getEpicById(2).toString());
     }
 
     @Test
     void updateSubtask() {
         manger.updateSubtask(13, "ChangedSubTask", "ChangedText", Status.NEW);
 
-        Assertions.assertEquals("13, SUBTASK, ChangedSubTask, NEW, ChangedText, 6",
+        Assertions.assertEquals("13,  ,  , SUBTASK, ChangedSubTask, NEW, ChangedText, 6",
                 manger.getSubtaskById(13).toString());
     }
 
     @Test
     void getTasksOfEpic() {
         Assertions.assertEquals(1, manger.getTasksOfEpic(2).size());
+    }
+
+    @Test
+    void checkingTimeIntervals() {
+        int day = 12;
+        int month = 10;
+        int year = 20;
+        int hour = 10;
+        int minute = 10;
+        int secund = 20;
+
+        for (AbstractTask task : manger.getAllTasks().values()) {
+            manger.setDateTime(task.getId(), String.format("%d.%d.%d|%d:%d:%d", day, month, year, hour, minute += 5, secund));
+        }
+
+        Assertions.assertEquals(3, manger.getPrioritizedTasks().size());
     }
 
 //    @Test

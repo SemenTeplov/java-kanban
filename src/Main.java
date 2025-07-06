@@ -16,18 +16,10 @@ public class Main {
         tManager.createEpicTask("Epic 3", "With subtasks");
         tManager.createEpicTask("Epic 4", "Without subtasks");
 
-        for (int i = 1; i <= 3; i++) {
-            for (int l = 1; l <= 3; l++) {
-                tManager.createSubtask(i, "subtask " + l, "something text");
-            }
+        int index = tManager.getNewId();
+        for (int l : tManager.getAllEpics().keySet()) {
+            tManager.createSubtask(l, "subtask " + index++, "something text");
         }
-
-        // Запрос задач
-        for (int i = 0; i < 5; i++) {
-            System.out.println(tManager.getEpicById(rand.nextInt(1, 5)));
-            System.out.println(tManager.getSubtaskById(rand.nextInt(5, 13)));
-        }
-        System.out.println();
 
         // Проверка истории на отсутствие повторов
         for (AbstractTask task : tManager.getHistory().getHistory()) {
@@ -50,6 +42,21 @@ public class Main {
 
         for (AbstractTask task : tManager.getHistory().getHistory()) {
             System.out.println(task);
+        }
+
+        tManager.createTask("Task 1", "something");
+        tManager.createTask("Task 2", "something");
+        tManager.createTask("Task 3", "something");
+
+        int day = 12;
+        int month = 10;
+        int year = 20;
+        int hour = 10;
+        int minute = 10;
+        int secund = 20;
+
+        for (AbstractTask task : tManager.getAllTasks().values()) {
+            tManager.setDateTime(task.getId(), String.format("%d.%d.%d|%d:%d:%d", day, month, year, hour, minute += 5, secund));
         }
     }
 }

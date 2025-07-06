@@ -1,5 +1,9 @@
 package models;
 
+import managers.utiles.DateTimeFormatPatterns;
+
+import java.time.LocalDateTime;
+
 public class Subtask extends AbstractTask {
     private final EpicTask owner;
 
@@ -27,6 +31,7 @@ public class Subtask extends AbstractTask {
     @Override
     public void setStatus(Status status) {
         super.status = status;
+        super.definitionDurationIfStatusDone();
         owner.checkStatus();
     }
 
@@ -65,6 +70,14 @@ public class Subtask extends AbstractTask {
 
     @Override
     public String toString() {
-        return String.format("%d, %s, %s, %s, %s, %d", getId(), type, getName(), status, getDescription(), getIdOwner());
+        return String.format("%d, %s, %s, %s, %s, %s, %s, %d",
+                getId(),
+                super.startTime == null ? " " : super.startTime.format(DateTimeFormatPatterns.format),
+                super.startTime == null ? " " : super.getEndTime().format(DateTimeFormatPatterns.format),
+                type,
+                getName(),
+                status,
+                getDescription(),
+                getIdOwner());
     }
 }

@@ -16,7 +16,7 @@ class EpicTaskTest {
 
     @Test
     void getTaskById() {
-        Assertions.assertEquals("3, SUBTASK, Subtask2, IN_PROGRESS, Text, 1", task.getTaskById(3).toString());
+        Assertions.assertEquals("3,  ,  , SUBTASK, Subtask2, IN_PROGRESS, Text, 1", task.getTaskById(3).toString());
     }
 
     @Test
@@ -67,6 +67,18 @@ class EpicTaskTest {
         task.addTask(new Subtask(2, task, "Subtask1", "Text"));
 
         Assertions.assertEquals(Status.DONE, task.getStatus());
+    }
+
+    @Test
+    void changeStatusOnDoneAndNew() {
+        for (int index : task.getAllTasks().keySet()) {
+            task.getTaskById(index).setStatus(Status.DONE);
+        }
+
+        task.addTask(new Subtask(2, task, "Subtask1", "Text"));
+        task.getTaskById(2).setStatus(Status.NEW);
+
+        Assertions.assertEquals(Status.IN_PROGRESS, task.getStatus());
     }
 
     @Test

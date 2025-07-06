@@ -1,5 +1,7 @@
 package models;
 
+import managers.utiles.DateTimeFormatPatterns;
+
 public class Task extends AbstractTask {
     public Task(int id, String name, String description) {
         super(id, name, description, Types.TASK);
@@ -13,6 +15,7 @@ public class Task extends AbstractTask {
     @Override
     public void setStatus(Status status) {
         super.status = status;
+        super.definitionDurationIfStatusDone();
     }
 
     @Override
@@ -50,6 +53,13 @@ public class Task extends AbstractTask {
 
     @Override
     public String toString() {
-        return String.format("%d, %s, %s, %s, %s", getId(), type, getName(), status, getDescription());
+        return String.format("%d, %s, %s, %s, %s, %s, %s",
+                getId(),
+                super.startTime == null ? " " : super.startTime.format(DateTimeFormatPatterns.format),
+                super.startTime == null ? " " : super.getEndTime().format(DateTimeFormatPatterns.format),
+                type,
+                getName(),
+                status,
+                getDescription());
     }
 }
