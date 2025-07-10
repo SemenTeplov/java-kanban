@@ -1,7 +1,6 @@
 package managers;
 
-import models.AbstractTask;
-import models.Status;
+import models.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,12 +11,12 @@ class InMemoryTaskManagerTest {
     @BeforeAll
     static void init() {
         for (int i = 1; i < 6; i++) {
-            manger.createTask("Task" + i, "Something text");
-            manger.createEpicTask("Epic" + i, "Something text");
+            manger.createTask(new Task(i, "Task" + i, "Something text"));
+            manger.createEpicTask(new EpicTask(i,"Epic" + i, "Something text"));
         }
 
-        for (int index : manger.getAllEpics().keySet()) {
-            manger.createSubtask(index, "Subtask" + index, "Something text");
+        for (EpicTask epic : manger.getAllEpics().values()) {
+            manger.createSubtask(new Subtask(0, epic, "Subtask", "Something text"));
         }
     }
 
@@ -53,21 +52,30 @@ class InMemoryTaskManagerTest {
 
     @Test
     void updateTask() {
-        manger.updateTask(1, "ChangedTask", "ChangedText", Status.NEW);
+        Task tmp = new Task(1, "ChangedTask", "ChangedText");
+        tmp.setStatus(Status.NEW);
+
+        manger.updateTask(tmp);
 
         Assertions.assertEquals("1, 12.10.20|10:15:20, 12.10.20|10:15:20, TASK, ChangedTask, NEW, ChangedText", manger.getById(1).toString());
     }
 
     @Test
     void updateEpicTask() {
-        manger.updateEpicTask(2, "ChangedEpicTask", "ChangedText", Status.NEW);
+        EpicTask tmp = new EpicTask(2, "ChangedEpicTask", "ChangedText");
+        tmp.setStatus(Status.NEW);
+
+        manger.updateEpicTask(tmp);
 
         Assertions.assertEquals("2,  ,  , EPIC, ChangedEpicTask, NEW, ChangedText", manger.getEpicById(2).toString());
     }
 
     @Test
     void updateSubtask() {
-        manger.updateSubtask(13, "ChangedSubTask", "ChangedText", Status.NEW);
+        Subtask tmp = new Subtask(13, manger.getEpicById(6) ,"ChangedSubTask", "ChangedText");
+        tmp.setStatus(Status.NEW);
+
+        manger.updateSubtask(tmp);
 
         Assertions.assertEquals("13,  ,  , SUBTASK, ChangedSubTask, NEW, ChangedText, 6",
                 manger.getSubtaskById(13).toString());
@@ -93,20 +101,4 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertEquals(3, manger.getPrioritizedTasks().size());
     }
-
-//    @Test
-//    void removeById() {
-//        manger.removeById(13);
-//
-//        Assertions.assertThrows(IllegalArgumentException.class, () -> manger.getSubtaskById(13).toString());
-//    }
-//
-//    @Test
-//    void removeAll() {
-//        manger.removeAll();
-//
-//        Assertions.assertTrue(manger.getAllTasks().isEmpty()
-//                && manger.getAllEpics().isEmpty()
-//                && manger.getAllSubtasks().isEmpty());
-//    }
 }

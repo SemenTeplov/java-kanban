@@ -3,7 +3,7 @@ package models;
 import managers.utiles.DateTimeFormatPatterns;
 
 public class Subtask extends AbstractTask {
-    private final EpicTask owner;
+    private EpicTask owner;
 
     public Subtask(int id, EpicTask owner, String name, String description) {
         super(id, name, description, Types.SUBTASK);
@@ -20,6 +20,10 @@ public class Subtask extends AbstractTask {
 
     public int getIdOwner() {
         return this.owner.getId();
+    }
+
+    public void setIdOwner(EpicTask task) {
+        this.owner = task;
     }
 
     public EpicTask getOwner() {

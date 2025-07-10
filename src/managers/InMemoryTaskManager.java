@@ -7,7 +7,6 @@ import models.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected static final Map<Integer, Task> tasks;
@@ -97,64 +96,49 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createTask(String name, String description) {
-        Task tmpTask = new Task(currentId++, name, description);
-
-        tasks.put(tmpTask.getId(), tmpTask);
-
-        if (tmpTask.getStartTime() != null) {
-            priorTasks.add(tmpTask);
-        }
+    public void createTask(Task task) {
+        checkingTaskOverlayForCreate(task);
+        task.setId(currentId++);
+        tasks.put(task.getId(), task);
     }
 
     @Override
-    public void createSubtask(int idOwner, String name, String description) {
-        Optional<EpicTask> oTask = Optional.of(epicTasks.get(idOwner));
+    public void createSubtask(Subtask subtask) {
+        checkingTaskOverlayForCreate(subtask);
+
+        Optional<EpicTask> oTask = Optional.of(epicTasks.get(subtask.getIdOwner()));
         EpicTask task = oTask.orElseThrow(IllegalArgumentException::new);
 
-        Subtask subtask = new Subtask(currentId++, epicTasks.get(idOwner), name, description);
+        subtask.setId(currentId++);
+        subtask.setIdOwner(task);
 
         subTasks.put(subtask.getId(), subtask);
         task.addTask(subtask);
-
-        if (subtask.getStartTime() != null) {
-            priorTasks.add(subtask);
-        }
     }
 
     @Override
-    public void createEpicTask(String name, String description) {
-        EpicTask tmpEpic = new EpicTask(currentId++, name, description);
-
-        epicTasks.put(tmpEpic.getId(), tmpEpic);
-
-        if (tmpEpic.getStartTime() != null) {
-            priorTasks.add(tmpEpic);
-        }
+    public void createEpicTask(EpicTask epicTask) {
+        checkingTaskOverlayForCreate(epicTask);
+        epicTask.setId(currentId++);
+        epicTasks.put(epicTask.getId(), epicTask);
     }
 
     @Override
-    public void updateTask(int id, String name, String description, Status status) {
-        Task task = getById(id);
-
-        updateTask(task, name, description, status);
-        checkPrioritizedTasks();
+    public void updateTask(Task task) {
+        checkingTaskOverlayForUpdate(task);
+        updateThisTask(getById(task.getId()), task.getName(), task.getDescription(), task.getStatus());
     }
 
     @Override
-    public void updateEpicTask(int id, String name, String description, Status status) {
-        EpicTask task = getEpicById(id);
-
-        updateTask(task, name, description, status);
-        checkPrioritizedTasks();
+    public void updateEpicTask(EpicTask task) {
+        checkingTaskOverlayForUpdate(task);
+        updateThisTask(getEpicById(task.getId()), task.getName(), task.getDescription(), task.getStatus());
     }
 
     @Override
-    public void updateSubtask(int id, String name, String description, Status status) {
-        Subtask task = getSubtaskById(id);
-
-        updateTask(task, name, description, status);
-        checkPrioritizedTasks();
+    public void updateSubtask(Subtask task) {
+        checkingTaskOverlayForUpdate(task);
+        updateThisTask(getSubtaskById(task.getId()), task.getName(), task.getDescription(), task.getStatus());
     }
 
     @Override
@@ -172,8 +156,7 @@ public class InMemoryTaskManager implements TaskManager {
                     priorTasks.add(subTasks.get(id));
                 }
 
-                line.put(Duration.between(LocalDateTime.parse(start, DateTimeFormatPatterns.format),
-                        LocalDateTime.parse(originTime, DateTimeFormatPatterns.format)).toMinutes() / 10, true);
+                putLine(start);
             } else {
                 System.out.println("Time of task is overlay");
             }
@@ -216,7 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
         return priorTasks;
     }
 
-    public boolean isTasksOverlay(String start) {
+    private boolean isTasksOverlay(String start) {
         if (start.isEmpty()) {
             return false;
         } else {
@@ -230,13 +213,27 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void updateTask(AbstractTask task, String name, String description, Status status) {
+    private void checkingTaskOverlayForUpdate(AbstractTask task) {
+        if (task.getStartTime() != null && isTasksOverlay(task.getStartTime().toString())) {
+            putLine(task.getStartTime().toString());
+        }
+    }
+
+    private void checkingTaskOverlayForCreate(AbstractTask task) {
+        if (task.getStartTime() != null && isTasksOverlay(task.getStartTime().toString())) {
+            putLine(task.getStartTime().toString());
+            priorTasks.add(task);
+        }
+    }
+
+    private void updateThisTask(AbstractTask task, String name, String description, Status status) {
         task.setName(name);
         task.setDescription(description);
         task.setStatus(status);
     }
 
-    private void checkPrioritizedTasks() {
-        priorTasks = priorTasks.stream().filter(a -> a.getStartTime() != null).collect(Collectors.toSet());
+    private void putLine(String start) {
+        line.put(Duration.between(LocalDateTime.parse(start, DateTimeFormatPatterns.format),
+                LocalDateTime.parse(originTime, DateTimeFormatPatterns.format)).toMinutes() / 10, true);
     }
 }

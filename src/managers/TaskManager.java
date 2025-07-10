@@ -25,17 +25,17 @@ public interface TaskManager {
 
     HistoryManager getHistory();
 
-    void createTask(String name, String description);
+    void createTask(Task task);
 
-    void createSubtask(int idOwner, String name, String description);
+    void createSubtask(Subtask subtask);
 
-    void createEpicTask(String name, String description);
+    void createEpicTask(EpicTask epicTask);
 
-    void updateTask(int id, String name, String description, Status status);
+    void updateTask(Task task);
 
-    void updateEpicTask(int id, String name, String description, Status status);
+    void updateEpicTask(EpicTask task);
 
-    void updateSubtask(int id, String name, String description, Status status);
+    void updateSubtask(Subtask task);
 
     void setDateTime(int id, String start);
 

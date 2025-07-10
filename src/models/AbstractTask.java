@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public abstract class AbstractTask {
-    private final int id;
+    private int id;
     private String name;
     private String description;
     private Duration duration;
@@ -27,6 +27,10 @@ public abstract class AbstractTask {
 
     public int getId() {
         return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -1,6 +1,9 @@
 import managers.Managers;
 import managers.TaskManager;
 import models.AbstractTask;
+import models.EpicTask;
+import models.Subtask;
+import models.Task;
 
 import java.util.Random;
 
@@ -11,14 +14,14 @@ public class Main {
         Random rand = new Random();
 
         // Создание двух задач эпик с тремя подзадачами и один эпик без подзадач.
-        tManager.createEpicTask("Epic 1", "With subtasks");
-        tManager.createEpicTask("Epic 2", "With subtasks");
-        tManager.createEpicTask("Epic 3", "With subtasks");
-        tManager.createEpicTask("Epic 4", "Without subtasks");
+        tManager.createEpicTask(new EpicTask(0, "Epic 1", "With subtasks"));
+        tManager.createEpicTask(new EpicTask(0, "Epic 2", "With subtasks"));
+        tManager.createEpicTask(new EpicTask(0, "Epic 3", "With subtasks"));
+        tManager.createEpicTask(new EpicTask(0, "Epic 4", "Without subtasks"));
 
         int index = tManager.getNewId();
-        for (int l : tManager.getAllEpics().keySet()) {
-            tManager.createSubtask(l, "subtask " + index++, "something text");
+        for (EpicTask et : tManager.getAllEpics().values()) {
+            tManager.createSubtask(new Subtask(0, et, "subtask " + index++, "something text"));
         }
 
         // Проверка истории на отсутствие повторов
@@ -44,9 +47,9 @@ public class Main {
             System.out.println(task);
         }
 
-        tManager.createTask("Task 1", "something");
-        tManager.createTask("Task 2", "something");
-        tManager.createTask("Task 3", "something");
+        tManager.createTask(new Task(0, "Task 1", "something"));
+        tManager.createTask(new Task(0, "Task 2", "something"));
+        tManager.createTask(new Task(0, "Task 3", "something"));
 
         int day = 12;
         int month = 10;

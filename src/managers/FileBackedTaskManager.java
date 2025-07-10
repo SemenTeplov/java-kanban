@@ -15,38 +15,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void createTask(String name, String description) {
-        super.createTask(name, description);
+    public void createTask(Task task) {
+        super.createTask(task);
         CSVManager.save(pathToFile, this);
     }
 
     @Override
-    public void createSubtask(int idOwner, String name, String description) {
-        super.createSubtask(idOwner, name, description);
+    public void createSubtask(Subtask task) {
+        super.createSubtask(task);
         CSVManager.save(pathToFile, this);
     }
 
     @Override
-    public void createEpicTask(String name, String description) {
-        super.createEpicTask(name, description);
+    public void createEpicTask(EpicTask task) {
+        super.createEpicTask(task);
         CSVManager.save(pathToFile, this);
     }
 
     @Override
-    public void updateTask(int id, String name, String description, Status status) {
-        super.updateTask(id, name, description, status);
+    public void updateTask(Task task) {
+        super.updateTask(task);
         CSVManager.save(pathToFile, this);
     }
 
     @Override
-    public void updateEpicTask(int id, String name, String description, Status status) {
-        super.updateEpicTask(id, name, description, status);
+    public void updateEpicTask(EpicTask task) {
+        super.updateEpicTask(task);
         CSVManager.save(pathToFile, this);
     }
 
     @Override
-    public void updateSubtask(int id, String name, String description, Status status) {
-        super.updateSubtask(id, name, description, status);
+    public void updateSubtask(Subtask task) {
+        super.updateSubtask(task);
         CSVManager.save(pathToFile, this);
     }
 
