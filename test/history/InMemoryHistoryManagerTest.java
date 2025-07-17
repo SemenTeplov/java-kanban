@@ -61,6 +61,28 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void removeInMiddle() {
+        int expected = manager.getHistory().size();
+
+        manager.remove(new Task(4, "Task", "Text"));
+
+        int actual = manager.getHistory().size();
+
+        Assertions.assertNotEquals(expected, actual);
+    }
+
+    @Test
+    void removeInFirst() {
+        int expected = manager.getHistory().size();
+
+        manager.remove(new Task(1, "Task", "Text"));
+
+        int actual = manager.getHistory().size();
+
+        Assertions.assertNotEquals(expected, actual);
+    }
+
+    @Test
     void getHistory() {
         Assertions.assertNotNull(manager.getHistory());
     }

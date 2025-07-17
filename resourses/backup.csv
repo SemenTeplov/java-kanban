@@ -1,14 +1,12 @@
-id,type,name,status,description,epic
-1,EPIC,Epic 1,IN_PROGRESS,With subtasks
-2,EPIC,Epic 2,IN_PROGRESS,With subtasks
-3,EPIC,Epic 3,IN_PROGRESS,With subtasks
-4,EPIC,Epic 4,IN_PROGRESS,Without subtasks
-5,SUBTASK,subtask 1,IN_PROGRESS,something text,1
-6,SUBTASK,subtask 2,IN_PROGRESS,something text,1
-7,SUBTASK,subtask 3,IN_PROGRESS,something text,1
-8,SUBTASK,subtask 1,IN_PROGRESS,something text,2
-9,SUBTASK,subtask 2,IN_PROGRESS,something text,2
-10,SUBTASK,subtask 3,IN_PROGRESS,something text,2
-11,SUBTASK,subtask 1,IN_PROGRESS,something text,3
-12,SUBTASK,subtask 2,IN_PROGRESS,something text,3
-13,SUBTASK,subtask 3,IN_PROGRESS,something text,3
+id,start,end,type,name,status,description,epic
+13, , ,EPIC,Epic 1,NEW,With subtasks
+14, , ,EPIC,Epic 2,NEW,With subtasks
+15, , ,EPIC,Epic 3,NEW,With subtasks
+16, , ,EPIC,Epic 4,NEW,Without subtasks
+18, , ,SUBTASK,subtask 17,IN_PROGRESS,something text,16
+19, , ,SUBTASK,subtask 18,IN_PROGRESS,something text,13
+20, , ,SUBTASK,subtask 19,IN_PROGRESS,something text,14
+21, , ,SUBTASK,subtask 20,IN_PROGRESS,something text,15
+22,12.10.20|10:15:20,12.10.20|10:15:20,TASK,Task 1,IN_PROGRESS,something
+23,12.10.20|10:20:20,12.10.20|10:20:20,TASK,Task 2,IN_PROGRESS,something
+24, , ,TASK,Task 3,IN_PROGRESS,something

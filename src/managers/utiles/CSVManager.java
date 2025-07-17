@@ -21,11 +21,9 @@ public class CSVManager {
         try {
             Files.delete(path);
             Files.createFile(path);
-            StringBuilder strings = new StringBuilder("id,type,name,status,description,epic\n");
+            StringBuilder strings = new StringBuilder("id,start,end,type,name,status,description,epic\n");
 
-            for (AbstractTask task : list) {
-                strings.append(toCSV(task)).append("\n");
-            }
+            list.forEach(item -> strings.append(toCSV(item)).append("\n"));
 
             Files.writeString(path, strings, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
         } catch (IOException e) {
@@ -36,6 +34,7 @@ public class CSVManager {
     public static List<String> loadFromFile(String str) {
         try {
             Path path = Path.of(str);
+
             return Files.readAllLines(path);
         } catch (IOException e) {
             throw new ManagerLoadException(e.getMessage());
