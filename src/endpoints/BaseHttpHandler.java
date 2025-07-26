@@ -11,7 +11,7 @@ import endpoints.utiles.Serialization;
 import managers.TaskManager;
 import models.AbstractTask;
 
-abstract public class BaseHttpHandler {
+public abstract class BaseHttpHandler {
     TaskManager tManager;
 
     public BaseHttpHandler(TaskManager tManager) {
