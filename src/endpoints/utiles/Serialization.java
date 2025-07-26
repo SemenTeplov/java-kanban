@@ -9,40 +9,40 @@ import models.Subtask;
 import models.Task;
 
 public class Serialization {
-    static public String serialized(EpicTask object) {
+    public static String serialized(EpicTask object) {
         return new GsonBuilder()
                 .registerTypeAdapter(EpicTask.class, new EpictaskSerializer())
                 .create()
                 .toJson(object);
     }
 
-    static public String serialized(AbstractTask object) {
+    public static String serialized(AbstractTask object) {
         return new GsonBuilder()
                 .registerTypeAdapter(Task.class, new TaskSerializer())
                 .create()
                 .toJson(object);
     }
 
-    static public String serialized(Subtask object) {
+    public static String serialized(Subtask object) {
         return new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new SubtaskSerializer())
                 .create()
                 .toJson(object);
     }
 
-    static public Gson deserializedEpic() {
+    public static Gson deserializedEpic() {
         return new GsonBuilder()
                 .registerTypeAdapter(EpicTask.class, new EpicDeserializer())
                 .create();
     }
 
-    static public Gson deserializedSubtask() {
+    public static Gson deserializedSubtask() {
         return new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new SubtaskDeserializer())
                 .create();
     }
 
-    static public Gson deserializedTask() {
+    public static Gson deserializedTask() {
         return new GsonBuilder()
                 .registerTypeAdapter(Task.class, new TaskDeserializer())
                 .create();
