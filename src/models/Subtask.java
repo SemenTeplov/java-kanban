@@ -1,7 +1,5 @@
 package models;
 
-import managers.utiles.DateTimeFormatPatterns;
-
 public class Subtask extends AbstractTask {
     private EpicTask owner;
 

@@ -1,7 +1,5 @@
 package models;
 
-import managers.utiles.DateTimeFormatPatterns;
-
 public class Task extends AbstractTask {
     public Task(int id, String name, String description) {
         super(id, name, description, Types.TASK);
