@@ -15,7 +15,7 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
         super(tManager);
     }
 
-    public SubtasksHandler(HttpExchange httpExchange, TaskManager tManager, int epicId ) throws IOException {
+    public SubtasksHandler(HttpExchange httpExchange, TaskManager tManager, int epicId) throws IOException {
         super(tManager);
         try {
             sendTasks(httpExchange, tManager.getTasksOfEpic(epicId));
