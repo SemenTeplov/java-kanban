@@ -41,14 +41,14 @@ public abstract class AbstractTask {
         this.name = name;
     }
 
-    public LocalDateTime getEndTime() {
-        return startTime.plus(duration);
+    public String getEndTime() {
+        return startTime.plus(duration).format(DateTimeFormatPatterns.format);
     }
 
     public void setDateTime(String start, String end) {
         if (!start.isBlank()) {
             this.startTime = LocalDateTime.parse(start, DateTimeFormatPatterns.format);
-            this.duration = Duration.between(this.startTime, LocalDateTime.parse(end, DateTimeFormatPatterns.format));
+            this.duration = Duration.between(this.startTime, LocalDateTime.parse(end));
         }
     }
 
@@ -69,11 +69,35 @@ public abstract class AbstractTask {
         return this.status;
     }
 
-    public LocalDateTime getStartTime() {
-        return this.startTime;
+    public String getStartTime() {
+        if (this.startTime != null) {
+            return this.startTime.format(DateTimeFormatPatterns.format);
+        }
+
+        return "";
+    }
+
+    public void setStartTime(LocalDateTime time) {
+        this.startTime = time;
     }
 
     public abstract void setStatus(Status status);
+
+    public Duration getDuration() {
+        return this.duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public Types getType() {
+        return type;
+    }
+
+    public void setType(Types type) {
+        this.type = type;
+    }
 
     protected void definitionDurationIfStatusDone() {
         if (Status.DONE.equals(this.status)) {

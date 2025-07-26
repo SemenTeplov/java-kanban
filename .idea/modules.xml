@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/test/Tests.iml" filepath="$PROJECT_DIR$/test/Tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/java-kanban.iml" filepath="$PROJECT_DIR$/java-kanban.iml" />
+      <module fileurl="file://$PROJECT_DIR$/m1-t25-api.iml" filepath="$PROJECT_DIR$/m1-t25-api.iml" />
     </modules>
   </component>
 </project>

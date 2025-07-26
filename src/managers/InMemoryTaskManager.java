@@ -16,7 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private static Set<AbstractTask> priorTasks;
     private static final Map<Long, Boolean> line;
-    private final HistoryManager hManager;
+    private HistoryManager hManager;
     private final String originTime = "01.01.25|00:00:00";
 
     static {
@@ -68,6 +68,9 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
         epicTasks.clear();
         subTasks.clear();
+        priorTasks.clear();
+        line.clear();
+        hManager = Managers.getDefaultHistory();
         currentId = 1;
     }
 
@@ -199,7 +202,7 @@ public class InMemoryTaskManager implements TaskManager {
         return priorTasks;
     }
 
-    private boolean isTasksOverlay(String start) {
+    public boolean isTasksOverlay(String start) {
         if (start.isEmpty()) {
             return false;
         } else {
@@ -214,14 +217,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void checkingTaskOverlayForUpdate(AbstractTask task) {
-        if (task.getStartTime() != null && isTasksOverlay(task.getStartTime().toString())) {
+        if (task.getStartTime() != null && isTasksOverlay(task.getStartTime())) {
             putLine(task.getStartTime().toString());
         }
     }
 
     private void checkingTaskOverlayForCreate(AbstractTask task) {
-        if (task.getStartTime() != null && isTasksOverlay(task.getStartTime().toString())) {
-            putLine(task.getStartTime().toString());
+        if (!task.getStartTime().isBlank() && !isTasksOverlay(task.getStartTime())) {
+            putLine(task.getStartTime());
             priorTasks.add(task);
         }
     }

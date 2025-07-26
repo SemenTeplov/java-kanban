@@ -30,6 +30,10 @@ public class Subtask extends AbstractTask {
         return this.owner;
     }
 
+    public void setOwner(EpicTask owner) {
+        this.owner = owner;
+    }
+
     @Override
     public void setStatus(Status status) {
         super.status = status;
@@ -74,8 +78,8 @@ public class Subtask extends AbstractTask {
     public String toString() {
         return String.format("%d, %s, %s, %s, %s, %s, %s, %d",
                 getId(),
-                super.startTime == null ? " " : super.startTime.format(DateTimeFormatPatterns.format),
-                super.startTime == null ? " " : super.getEndTime().format(DateTimeFormatPatterns.format),
+                super.startTime == null ? " " : super.getStartTime(),
+                super.startTime == null ? " " : super.getEndTime(),
                 type,
                 getName(),
                 status,
