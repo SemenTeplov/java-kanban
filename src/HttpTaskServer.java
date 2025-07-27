@@ -8,8 +8,8 @@ import managers.Managers;
 import managers.TaskManager;
 
 public class HttpTaskServer {
-    TaskManager tManager;
-    HttpServer httpServer;
+    private final TaskManager tManager;
+    private final HttpServer httpServer;
 
     public HttpTaskServer() throws IOException {
         tManager = Managers.getDefault();
