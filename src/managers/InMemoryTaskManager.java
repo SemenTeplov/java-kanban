@@ -15,7 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected static final Map<Integer, Subtask> subTasks;
     protected static Integer currentId;
 
-    private final static Set<AbstractTask> priorTasks;
+    private static final Set<AbstractTask> priorTasks;
     private static final Map<Long, Boolean> line;
     private HistoryManager hManager;
     private final String originTime = "01.01.25|00:00:00";
