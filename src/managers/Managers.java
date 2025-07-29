@@ -5,7 +5,7 @@ import history.InMemoryHistoryManager;
 
 public class Managers {
     public static TaskManager getDefault() {
-        return new FileBackedTaskManager("resourses/backup.csv");
+        return new InMemoryTaskManager();
     }
 
     public static HistoryManager getDefaultHistory() {

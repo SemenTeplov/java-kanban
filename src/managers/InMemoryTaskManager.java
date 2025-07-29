@@ -1,6 +1,7 @@
 package managers;
 
 import history.HistoryManager;
+import history.InMemoryHistoryManager;
 import managers.utiles.DateTimeFormatPatterns;
 import models.*;
 
@@ -14,9 +15,9 @@ public class InMemoryTaskManager implements TaskManager {
     protected static final Map<Integer, Subtask> subTasks;
     protected static Integer currentId;
 
-    private static Set<AbstractTask> priorTasks;
+    private static final Set<AbstractTask> priorTasks;
     private static final Map<Long, Boolean> line;
-    private final HistoryManager hManager;
+    private HistoryManager hManager;
     private final String originTime = "01.01.25|00:00:00";
 
     static {
@@ -68,6 +69,9 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
         epicTasks.clear();
         subTasks.clear();
+        priorTasks.clear();
+        line.clear();
+        hManager = new InMemoryHistoryManager();
         currentId = 1;
     }
 
@@ -199,7 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
         return priorTasks;
     }
 
-    private boolean isTasksOverlay(String start) {
+    public boolean isTasksOverlay(String start) {
         if (start.isEmpty()) {
             return false;
         } else {
@@ -214,14 +218,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void checkingTaskOverlayForUpdate(AbstractTask task) {
-        if (task.getStartTime() != null && isTasksOverlay(task.getStartTime().toString())) {
-            putLine(task.getStartTime().toString());
+        if (task.getStartTime() != null && isTasksOverlay(task.getStartTime())) {
+            putLine(task.getStartTime());
         }
     }
 
     private void checkingTaskOverlayForCreate(AbstractTask task) {
-        if (task.getStartTime() != null && isTasksOverlay(task.getStartTime().toString())) {
-            putLine(task.getStartTime().toString());
+        if (!task.getStartTime().isBlank() && !isTasksOverlay(task.getStartTime())) {
+            putLine(task.getStartTime());
             priorTasks.add(task);
         }
     }

@@ -44,4 +44,6 @@ public interface TaskManager {
     Map<Integer, Subtask> getTasksOfEpic(int id);
 
     Set<AbstractTask> getPrioritizedTasks();
+
+    boolean isTasksOverlay(String start);
 }

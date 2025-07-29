@@ -1,7 +1,5 @@
 package models;
 
-import managers.utiles.DateTimeFormatPatterns;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,8 +81,8 @@ public class EpicTask extends AbstractTask {
     public String toString() {
         return String.format("%d, %s, %s, %s, %s, %s, %s",
                 getId(),
-                super.startTime == null ? " " : super.startTime.format(DateTimeFormatPatterns.format),
-                super.startTime == null ? " " : super.getEndTime().format(DateTimeFormatPatterns.format),
+                super.startTime == null ? " " : super.getStartTime(),
+                super.startTime == null ? " " : super.getEndTime(),
                 type,
                 getName(),
                 status,
